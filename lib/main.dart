@@ -1,4 +1,5 @@
-import 'dart0convert';
+
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -21,10 +22,6 @@ class MotionAiApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF121212),
         primaryColor: Colors.deepPurple,
-        colorScheme: const ColorScheme.dark(
-          primary: Colors.deepPurpleAccent,
-          secondary: Colors.tealAccent,
-        ),
       ),
       home: const HomeScreen(),
     );
@@ -114,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (response.statusCode != 201 && response.statusCode != 200) {
         final err = jsonDecode(response.body);
-        throw Exception(err['detail'] ?? 'API хүсэлт амжилтгүй боллоо (${response.statusCode})');
+        throw Exception(err['detail'] ?? 'API хүсэлт амжилтгүй боллоо');
       }
 
       final jsonResponse = jsonDecode(response.body);
@@ -172,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     }
-    throw Exception('Боловсруулах хугацаа дууслаа (Timeout).');
+    throw Exception('Боловсруулах хугацаа дууслаа.');
   }
 
   Future<void> _initializeVideoPlayer(String url) async {
