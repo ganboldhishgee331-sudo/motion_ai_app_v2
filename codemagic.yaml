@@ -1,0 +1,12 @@
+workflows:
+  default-workflow:
+    name: Default Workflow
+    environment:
+      flutter: stable
+    scripts:
+      - name: Initialize Flutter platforms
+        script: flutter create . --platforms=android
+      - name: Build APK
+        script: flutter build apk --release
+    artifacts:
+      - build/**/outputs/apk/release/*.apk
