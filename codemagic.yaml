@@ -7,18 +7,47 @@ workflows:
       flutter: stable
       java: 17
     scripts:
-      - name: Ensure Android platform directory
+      - name: Generate complete Flutter project structure
         script: |
-          if [ ! -d "android" ]; then
-            echo "Android directory missing, generating..."
-            flutter create . --platforms=android --org com.example
+          # 1. Check if pubspec.yaml exists, if not create minimal version
+          if [ ! -f "pubspec.yaml" ]; then
+            cat << 'EOF' > pubspec.yaml
+          name: motion_ai_app_v2
+          description: "Motion AI Flutter app"
+          publish_to: 'none'
+          version: 1.0.0+1
+          environment:
+            sdk: '>=3.0.0 <4.0.0'
+          dependencies:
+            flutter:
+              sdk: flutter
+            cupertino_icons: ^1.0.6
+            http: ^1.2.0
+            image_picker: ^1.0.7
+            path_provider: ^2.1.2
+            video_player: ^2.8.2
+          dev_dependencies:
+            flutter_test:
+              sdk: flutter
+          flutter:
+            uses-material-design: true
+          EOF
           fi
+
+          # 2. Re-create Android files properly
+          rm -rf android
+          flutter create . --platforms=android --org com.example
+
+          # 3. Fix Android SDK path
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-      - name: Get Flutter dependencies
+
+      - name: Fetch Flutter dependencies
         script: |
           flutter pub get
+
       - name: Build Android APK
         script: |
-          flutter build apk --release
+          flutter build apk --release --no-tree-shake-icons
+
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
