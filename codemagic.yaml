@@ -1,11 +1,13 @@
+
 workflows:
   default-workflow:
     name: Default Workflow
     environment:
       flutter: stable
     scripts:
-      - name: Initialize Android project
-        script: flutter create . --platforms=android
+      - name: Create platform directories
+        script: |
+          flutter create . --platforms=android --org com.example.motionai
       - name: Get Flutter packages
         script: flutter pub get
       - name: Build APK
